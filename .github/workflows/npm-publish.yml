@@ -40,7 +40,7 @@ on:
 
 jobs:
     check-if-merged:
-        runs-on: ubuntu-latest
+        runs-on: blacksmith-2vcpu-ubuntu-2404 # trunk-ignore(actionlint/runner-label)
         outputs:
             should_run: ${{ steps.check.outputs.should_run }}
         steps:
@@ -58,10 +58,10 @@ jobs:
     debug-check:
         needs: check-if-merged
         if: needs.check-if-merged.outputs.should_run == 'true'
-        runs-on: ubuntu-latest
+        runs-on: blacksmith-2vcpu-ubuntu-2404 # trunk-ignore(actionlint/runner-label)
         steps:
             - name: Checkout
-              uses: actions/checkout@v4 # zizmor: ignore[unpinned-uses]
+              uses: actions/checkout@v6 # zizmor: ignore[unpinned-uses]
               with:
                   persist-credentials: false
                   token: ${{ secrets.ACTIONS_KEY }}
@@ -196,16 +196,16 @@ jobs:
     build:
         needs: [check-if-merged, debug-check]
         if: needs.check-if-merged.outputs.should_run == 'true'
-        runs-on: ubuntu-latest
+        runs-on: blacksmith-2vcpu-ubuntu-2404 # trunk-ignore(actionlint/runner-label)
         strategy:
             matrix:
-                node-version: [20, 22]
+                node-version: [20, 22, 24]
         permissions:
             contents: read
             packages: write
         steps:
             - name: Checkout
-              uses: actions/checkout@v4 # zizmor: ignore[unpinned-uses]
+              uses: actions/checkout@v6 # zizmor: ignore[unpinned-uses]
               with:
                   persist-credentials: false
                   token: ${{ secrets.ACTIONS_KEY }}
@@ -215,7 +215,7 @@ jobs:
                   version: 10
 
             - name: Use Node.js ${{ matrix.node-version }}
-              uses: actions/setup-node@v4 # zizmor: ignore[unpinned-uses]
+              uses: actions/setup-node@v6 # zizmor: ignore[unpinned-uses]
               with:
                   node-version: ${{ matrix.node-version }}
                   cache: pnpm
@@ -244,7 +244,7 @@ jobs:
               if: matrix.node-version == '22'
 
             - name: Cache dependencies
-              uses: actions/cache@v4 # zizmor: ignore[unpinned-uses]
+              uses: actions/cache@v5 # zizmor: ignore[unpinned-uses]
               with:
                   path: ~/.pnpm-store
                   key: ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
@@ -256,7 +256,7 @@ jobs:
     coverage-report:
         needs: [check-if-merged, build]
         if: needs.check-if-merged.outputs.should_run == 'true'
-        runs-on: ubuntu-latest
+        runs-on: blacksmith-2vcpu-ubuntu-2404 # trunk-ignore(actionlint/runner-label)
         steps:
             - name: Coveralls Finished
               uses: coverallsapp/github-action@v2 # zizmor: ignore[unpinned-uses]
@@ -268,7 +268,7 @@ jobs:
     publish-github-packages:
         needs: [check-if-merged, build, coverage-report]
         if: needs.check-if-merged.outputs.should_run == 'true'
-        runs-on: ubuntu-latest
+        runs-on: blacksmith-2vcpu-ubuntu-2404 # trunk-ignore(actionlint/runner-label)
         permissions:
             contents: write
             packages: write
@@ -278,7 +278,7 @@ jobs:
 
         steps:
             - name: Checkout
-              uses: actions/checkout@v4 # zizmor: ignore[unpinned-uses]
+              uses: actions/checkout@v6 # zizmor: ignore[unpinned-uses]
               with:
                   persist-credentials: false
                   token: ${{ secrets.GITHUB_TOKEN }}
@@ -288,10 +288,10 @@ jobs:
               with:
                   version: 10
 
-            - name: Use Node.js - 22
-              uses: actions/setup-node@v4 # zizmor: ignore[unpinned-uses]
+            - name: Use Node.js - 24
+              uses: actions/setup-node@v6 # zizmor: ignore[unpinned-uses]
               with:
-                  node-version: 22
+                  node-version: 24
                   registry-url: https://registry.npmjs.org
                   scope: '@humanspeak'
 
