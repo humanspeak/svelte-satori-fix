@@ -1,3 +1,3 @@
 // Reexport your entry components here
 
-export * from './utils/main'
+export * from './utils/main.js'
