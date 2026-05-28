@@ -1,6 +1,5 @@
 {
-	"extends": "./.svelte-kit/tsconfig.json",
-	"compilerOptions": {
+    "compilerOptions": {
         "allowJs": true,
         "checkJs": true,
         "esModuleInterop": true,
@@ -12,7 +11,8 @@
         "sourceMap": true,
         "inlineSources": true,
         "strict": true,
-		"module": "ESNext",
-		"moduleResolution": "bundler"
-	}
+        "module": "ESNext",
+        "moduleResolution": "bundler"
+    },
+    "extends": "./.svelte-kit/tsconfig.json"
 }
