@@ -15,9 +15,3 @@ runs:
           shell: bash
           run: |
               pnpm install --frozen-lockfile
-
-        - name: Install WWW NodeJS dependencies
-          shell: bash
-          run: |
-              cd www
-              pnpm install --frozen-lockfile
