@@ -27,6 +27,10 @@ export default ts.config(
         }
     },
     {
+        files: ['.github/scripts/*.mjs'],
+        rules: { camelcase: 'error' }
+    },
+    {
         files: ['**/*.svelte', '**/*.svelte.ts', '**/*.svelte.js'],
         languageOptions: {
             parserOptions: {
